@@ -1,0 +1,89 @@
+<html>
+
+<head>
+    <title>demo0905</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+    <meta charset="UTF-8">
+</head>
+
+<body>
+    <style>
+        div{
+            border : black 1px solid;
+            padding :10px;
+        }
+        form{
+            margin : 0px;
+        }
+    </style>
+    <div>
+        <form action="./insertData.php" method = "post">
+            name : <input name = "username"><br>
+            age : <input type = "number" name = "age"><br>
+            city : <select name = "city"></select><br>
+            projects : <input type = "number" name="projects"><br>
+            <input type = "submit">
+        </form>
+
+        <button class = "showTb">show table</button>
+        <button>last id</button>
+    </div>
+    <table class = "showTable" rules="all">
+        <tr class = "tableHead">
+            
+        </tr>
+    </table>
+    <script>
+        let arr = ["Taipei","Park","Puli","Temple","Tainan"]
+        
+        for(let i = 0 ; i < arr.length ; i++){
+            let node = document.createElement("option");
+            let textnode = document.createTextNode(arr[i]);                 
+            let attr = document.createAttribute("value");
+
+            textnode.value = arr[i];
+            node.appendChild(textnode);
+            document.querySelector('select[name=city]').appendChild(node);
+        }
+ 
+        $(".showTb").click(function(){
+            $.ajax({
+                url: "/mysqlTest/showDb.php",
+                type: 'GET',
+                error: function(err){
+                    console.log("ajax fail.")
+                },
+                success: function(result) {
+                    let table = JSON.parse(result);
+                    $(".tableHead").append(
+                        `<th>id</th>
+                        <th>name</th>
+                        <th>age</th>
+                        <th>city</th>
+                        <th>projects</th>`
+                    )
+
+                    for(let i in table){
+                        console.log(table[i]);
+                        $(".showTable").appendTo(
+                            "<tr>"+
+                            "<td>" + table[i].id + "</td>" +
+                            "<td>" + table[i].name + "</td>" +
+                            "<td>" + table[i].age + "</td>" +
+                            "<td>" + table[i].city + "</td>" +
+                            "<td>" + table[i].projects + "</td>" +
+                            "</tr>"
+                        )
+                    }
+                    console.log(table)
+                }
+            });
+        })
+    </script>
+    
+
+</body>
+
+
+</html>
